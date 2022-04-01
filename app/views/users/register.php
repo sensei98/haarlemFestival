@@ -2,12 +2,22 @@
    require APPROOT . '/views/includes/head.php';
 ?>
 
-<div class="navbar">
+<div class="section-landing">
     <?php
        require APPROOT . '/views/includes/navigation.php';
     ?>
 </div>
-
+<!--
+<script src="https://www.google.com/recaptcha/api.js?render=6Lfd3UEaAAAAAPea7o_3MQf9NtUy3EJBhRTex33R"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6Lfd3UEaAAAAAPea7o_3MQf9NtUy3EJBhRTex33R', { action: 'contact' }).then(function (token) {
+                var recaptchaResponse = document.getElementById('recaptchaResponse');
+                recaptchaResponse.value = token;
+            });
+        });
+</script>
+    -->
 <div class="container-login">
     <div class="wrapper-login">
         <h2>Register</h2>
@@ -37,7 +47,7 @@
                 <?php echo $data['confirmPasswordError']; ?>
             </span>
 
-            <button id="submit" type="submit" value="submit">Submit</button>
+            <button class="darkBtn" id="submit" type="submit" value="submit">Submit</button>
 
             <p class="options">Already registered? <a href="<?php echo URLROOT; ?>/users/login">Log In!</a></p>
         </form>

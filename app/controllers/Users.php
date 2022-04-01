@@ -157,4 +157,48 @@ class Users extends Controller {
         unset($_SESSION['email']);
         header('location:' . URLROOT . '/users/login');
     }
+    public function passwordReset(){
+        $this->view('users/passwordReset');
+    }
+
+    public function newPasswordReset(){
+        
+        if($_GET['key'] && $_GET['reset']){
+            $data = [
+                'email' => $_GET['key'],
+                'password' => $_GET['reset']
+            ];
+        }
+        $this->view('users/newPasswordReset', $data);
+        
+
+        //check for POST
+        if(isset($_POST['submit_password']) && $_POST['email']) {
+            
+            $data = [
+                'email' => $_POST['email'],
+                'password' => $_POST['passwordNew']
+            ];
+            //change password in database
+            if($this->userModel->resetPasswordDb($data)){
+                $this->view('users/login');
+            }
+            else{
+                die('could not reset password');
+            }
+        }
+    }
+
+    public function sendEmail() {
+        $data = [
+            'email' => trim($_POST['email']),
+        ];
+        $this->view('users/sendEmail');
+        
+
+        if(isset($_POST['submit_email']) && $_POST['email']) {
+            //Send Email to reset password.
+            $this->userModel->sendResetEmail($data);
+         }
+    }
 }
