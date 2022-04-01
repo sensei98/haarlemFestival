@@ -82,4 +82,29 @@ class User {
         $result = $this->db->resultSet();
         return $result;
     }
+
+    public function sendResetEmail($data){
+        $this->db->query('SELECT email, password FROM Users WHERE email= :email');
+            //Email param will be binded with the email variable
+            $this->db->bind(':email', $data['email']);
+            
+            if($this->db->rowCount()==1)
+                {
+                  
+                    $row = $this->db->single();
+                    $email = md5($row->email);
+                    $pass = $row->password;
+
+                    //prepare link for email body
+                    $link="http://localhost/HaarlemFestival_CMS/users/newPasswordReset?key=".$email."&reset=".$pass. ''; 
+                    
+                    //send email
+                    $to_email = $data['email'];
+                    $subject = 'Password Reset';
+                    $message = 'Please click the following link to reset your password ' . $link . '';
+                    $headers = 'From: noreply@FAKELINK.nl';
+                    echo($to_email . $subject . $message . $headers);
+                    mail($to_email,$subject,$message,$headers);
+            }
+    }
 }

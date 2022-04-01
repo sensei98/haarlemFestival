@@ -38,10 +38,6 @@ require APPROOT . '/views/includes/head.php';
                         <div class="col-md-6">
                             <input type="date" id="datePick" value="<?php echo date('Y-m-d') ?>" min="2020-01-01" max="2021-12-31">
                         </div>
-                        <!--<div class="col-md-6">
-                            <div style="color: #fff;">Off <i id="toggleSwitch" class="fas fa-toggle-on fa-lg"></i> ON
-                            </div>
-                        </div>-->
                     </div>
                     <div class="dropdown">
                         <select name="events" id="events">
@@ -66,30 +62,25 @@ require APPROOT . '/views/includes/head.php';
                     </div>
                     </br>
                     <div class="btn-group" role="group">
-                        <!--<button class="btn btn-secondary" type="button">
-                            <i class="fas fa-plus-square"></i> Add Image
-                        </button>-->
                         <button class="btn btn-warning" type="button">
                             <i class="fas fa-save"></i> Save Current Changes
                         </button>
                     </div>
                     </br>
-                    <!--
-                    <button type="button" class="btn btn-success btn-sm">
-                        <i class="fas fa-edit"></i> Edit Current Article
-                    </button>
-                            -->
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="MainTitleArea" placeholder="Article Title here" value="<?php echo($data['events'][0]->artistname)?>">
-                    <textarea class="form-control" id="MainTextArea" rows="20" placeholder="Article Text here"><?php echo($data['events'][0]->about)?></textarea>
+                    <input type="text" class="form-control" id="MainTitleArea" placeholder="Article Title here">
+                    <textarea class="form-control" id="MainTextArea" rows="20" placeholder="Article Text here"></textarea>
                 </div>
                 <div class="col-md-3">
                     <div>
-                    
-                    <?php /*var_dump($data)*/?>
+                        <!--<?php foreach ($data['events'] as $row) : ?>
+                            <tr>
+                                <td><?= $row->artistname; ?></td>
+                            </tr>
+                        <?php endforeach; ?>-->
                     </div>
                 </div>
             </div>
