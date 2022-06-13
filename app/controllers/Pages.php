@@ -287,10 +287,10 @@ class Pages extends Controller
                 $_SESSION['due_date'] = $payment->expiresAt;
 
                 $payments = $mollie->payments->get($_SESSION['payment_id']);
-                $this->generatePDF();
+                $this->generateInvoice();
                 if ($payments->isPaid()) {
-                    //generatepdf
-                    $this->generatePDF();
+                    //generateInvoice
+                    $this->generateInvoice();
                 } else {
                     echo "payment error";
                 }
@@ -303,12 +303,17 @@ class Pages extends Controller
 
 
     //function for PDF creation
-    public function generatePDF()
+    public function generateInvoice()
     {
         try {
             $pdf = new FPDF();
             $pdf->AddPage();
             $pdf->SetFont('Arial', 'B', 10);
+
+            //path to Logo
+            $pathToLogo = URLROOT . "/public/img/icons/logo.png";
+            $pdf->Image($pathToLogo, 150, 10, 20, 0, 'PNG'); //placing image into pdf
+
 
             //orderId
             $orderId = $this->orderNumberGen();
@@ -333,16 +338,6 @@ class Pages extends Controller
             $phonenumber = $this->ValidateData($_POST["phonenumber"]);
             $priceWithVAT = $this->calculateVat();
 
-            //path to Logo
-            $pathToLogo = URLROOT . "/public/img/icons/logo.png";
-            $pdf->Image($pathToLogo, 10, 10, 200, 0, 'PNG'); //placing image into pdf
-
-            //qr code
-            $qr = new QRCode();
-            $filename = APPROOT . '/../public/img/qrCode/qr.png';
-            $url = sprintf('http://localhost:8080/php/SchoolStuff/HaarlemFestival-Group2-Merging/pages'); //link to website
-            $qr->render($url, $filename);
-            $pdf->Image($filename, 150, 20);
 
             //order number
             $pdf->Cell(100, 10, "Order number: " . $orderId, 1, 0, 'C');
@@ -363,12 +358,7 @@ class Pages extends Controller
             //phone number
             $pdf->Cell(100, 10, "Phone number: " . $phonenumber, 1, 0, 'C');
             $pdf->Ln();
-            //total amount
-            $pdf->Cell(100, 10, "Total: " . EURO . $totalprice, 1, 0, 'C');
-            $pdf->Ln();
-            //value added tax
-            $pdf->Cell(100, 10, "Total price with VAT(21%): " . EURO . $priceWithVAT, 1, 0, 'C');
-            $pdf->Ln();
+
             //invoice date
             $pdf->Cell(100, 10, "Invoice Date: "  . $invoiceDate, 1, 0, 'C');
             $pdf->Ln();
@@ -376,6 +366,52 @@ class Pages extends Controller
             $pdf->Cell(100, 10, "Payment Due Date: "  . $paymentDueDate, 1, 0, 'C');
             $pdf->Ln();
 
+            foreach ($_SESSION["shopping_cart"] as $item) {
+                //cart item name
+                $pdf->Cell(100, 10, "ARTIST: " . $item["item_name"], 1, 0, 'C');
+                $pdf->Ln();
+                //cart item price
+                $pdf->Cell(100, 10, "PRICE PER PERSON: " . EURO .  $item["item_price"], 1, 0, 'C');
+                $pdf->Ln();
+            }
+
+            //total amount
+            $pdf->Cell(100, 10, "Total: " . EURO . $totalprice, 1, 0, 'C');
+            $pdf->Ln();
+            //value added tax
+            $pdf->Cell(100, 10, "Total price with VAT(21%): " . EURO . $priceWithVAT, 1, 0, 'C');
+            $pdf->Ln();
+
+            $this->generateTicket();
+            $filename = "haarlem_festival_invoice.pdf";
+            $pdf->Output('F', '../' . $filename, true);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+    public function generateTicket()
+    {
+        try {
+            $pdf = new FPDF();
+            $pdf->AddPage();
+            $pdf->SetFont('Arial', 'B', 10);
+
+            //path to Logo
+            $pathToLogo = URLROOT . "/public/img/icons/logo.png";
+            $pdf->Image($pathToLogo, 150, 10, 20, 0, 'PNG'); //placing image into pdf
+
+            //qr code
+            $qr = new QRCode();
+            $filename = APPROOT . '/../public/img/qrCode/qr.png';
+            $url = sprintf('http://localhost:8080/php/SchoolStuff/HaarlemFestival-Group2-Merging/pages'); //link to website
+            $qr->render($url, $filename);
+            $pdf->Image($filename, 150, 40);
+
+            //ticketId
+            $ticketID = $this->orderNumberGen();
+            //ticket number
+            $pdf->Cell(100, 10, "Ticket number: " . $ticketID, 1, 0, 'C');
+            $pdf->Ln();
 
             foreach ($_SESSION["shopping_cart"] as $item) {
                 //cart item name
@@ -384,12 +420,9 @@ class Pages extends Controller
                 //cart item location
                 $pdf->Cell(100, 10, "EVENT LOCATION: " . $item["item_location"], 1, 0, 'C');
                 $pdf->Ln();
-                //cart item price
-                $pdf->Cell(100, 10, "PRICE PER PERSON: " . EURO .  $item["item_price"], 1, 0, 'C');
-                $pdf->Ln();
             }
 
-            $filename = "haarlem_festival.pdf";
+            $filename = "ticket.pdf";
             $pdf->Output('F', '../' . $filename, true);
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -404,24 +437,31 @@ class Pages extends Controller
             //$mail->SMTPDebug = 3; //Enable verbose debug output
             $mail->isSMTP(); //Send using SMTP
             $mail->Host = 'smtp.gmail.com';  //Set the SMTP server to send through
+            //$mail->Host = 'mail.641496.infhaarlem.nl';  //Set the SMTP server to send through
             $mail->SMTPAuth = true; //Enable SMTP authentication
             $mail->Username = 'haarlemfestivalgroup2@gmail.com'; //SMTP username
-            $mail->Password = 'haarlemfestival'; //password
+            //$mail->Username = 's641496'; //SMTP username
+            //$mail->Password = 'haarlemfestival'; //password
+            $mail->Password = 'fvofcvpmwexqubaz'; //password
+            //$mail->Password = 'j6mouYyw'; //password
             $mail->SMTPSecure = "tls";
             $mail->Port = 587; //googlemail port
 
             $email =  $_SESSION["email_address"];
             $mail->setFrom('haarlemfestivalgroup2@gmail.com', "Haarlem Festival");
+            //$mail->setFrom('mail.641496.infhaarlem.nl', "Haarlem Festival");
             $mail->addAddress($email); //recipient email
 
-            $filename = 'haarlem_festival.pdf';
+            $filename = 'haarlem_festival_invoice.pdf';
+            $ticket = 'ticket.pdf';
             $mail->addAttachment('../' . $filename);
+            $mail->addAttachment('../' . $ticket);
 
             //Content
             $mail->isHTML(true); //Set email format to HTML
             $mail->Subject = 'Haarlem Festival!';
             $mail->Body = '<b>Welcome to the haarlem Festival!</b>  ';
-            $mail->Body .= 'Your ticket is in the attachment below! <b>Enjoy!</b>';
+            $mail->Body .= 'Your ticket and invoice is in the attachment below! <b>Enjoy!</b>';
 
 
             $mail->send();
