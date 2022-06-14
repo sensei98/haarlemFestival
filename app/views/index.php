@@ -2,9 +2,10 @@
 require APPROOT . '/views/includes/head.php';
 ?>
 <div id="section-landing">
-    <?php
+
+    <!-- <?php
     require APPROOT . '/views/includes/navigation.php';
-    ?>
+    ?> -->
 
     <div class="wrapper-landing">
         <h1>Welcome</h1>

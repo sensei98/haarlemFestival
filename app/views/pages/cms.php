@@ -2,13 +2,13 @@
 require APPROOT . '/views/includes/head.php';
 ?>
 <div class="tenPwrapper">
-    <?php
+    <!-- <?php
     require APPROOT . '/views/includes/navigation.php';
-    ?>
+    ?> -->
 </div>
 <script>
-    $(document).ready(function() {
-        $('#toggleSwitch').click(function() {
+    $(document).ready(function () {
+        $('#toggleSwitch').click(function () {
             $(this).toggleClass('fa-toggle-on');
             $(this).toggleClass('fa-toggle-off');
         });
@@ -36,20 +36,25 @@ require APPROOT . '/views/includes/head.php';
                 <div class="col-md-3">
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="date" id="datePick" value="<?php echo date('Y-m-d') ?>" min="2020-01-01" max="2021-12-31">
+                            <form action="" method="post">
+                                <input type="date" id="datePick" value="<?php echo $data['shownDate'] ?>" min="2020-01-01"
+                                    max="2021-12-31">
+                            </form>
                         </div>
                         <!--<div class="col-md-6">
                             <div style="color: #fff;">Off <i id="toggleSwitch" class="fas fa-toggle-on fa-lg"></i> ON
                             </div>
                         </div>-->
                     </div>
-                    <div class="dropdown">
-                        <select name="events" id="events">
-                            <?php foreach ($data["events"] as $event) : ?>
+                    <form action="POST">
+                        <div class="dropdown">
+                            <select name="events" id="events">
+                                <?php foreach ($data["events"] as $event) : ?>
                                 <option value="<?= $event->artistname ?>"><?= $event->artistname ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </form>
                 </div>
                 <div class="col-md-3">
                 </div>
@@ -83,13 +88,15 @@ require APPROOT . '/views/includes/head.php';
             </div>
             <div class="row">
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="MainTitleArea" placeholder="Article Title here" value="<?php echo($data['events'][0]->artistname)?>">
-                    <textarea class="form-control" id="MainTextArea" rows="20" placeholder="Article Text here"><?php echo($data['events'][0]->about)?></textarea>
+                    <input type="text" class="form-control" id="MainTitleArea" placeholder="Article Title here"
+                        value="<?php echo($data['events'][0]->artistname)?>">
+                    <textarea class="form-control" id="MainTextArea" rows="20"
+                        placeholder="Article Text here"><?php echo($data['events'][0]->about)?></textarea>
                 </div>
                 <div class="col-md-3">
                     <div>
-                    
-                    <?php /*var_dump($data)*/?>
+
+                        <?php /*var_dump($data)*/?>
                     </div>
                 </div>
             </div>

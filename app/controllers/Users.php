@@ -145,9 +145,11 @@ class Users extends Controller {
     }
 
     public function createUserSession($user) {
-        $_SESSION['user_id'] = $user->id;
+        var_dump($user);
+        $_SESSION['user_id'] = $user->ID;
         $_SESSION['username'] = $user->username;
         $_SESSION['email'] = $user->email;
+        $_SESSION['type'] = $user->type_id;
         header('location:' . URLROOT . '/pages/index');
     }
 
@@ -155,6 +157,7 @@ class Users extends Controller {
         unset($_SESSION['user_id']);
         unset($_SESSION['username']);
         unset($_SESSION['email']);
+        unset($_SESSION['type']);
         header('location:' . URLROOT . '/users/login');
     }
     public function passwordReset(){

@@ -2,9 +2,9 @@
 require APPROOT . '/views/includes/head.php';
 ?>
 <div class="tenPwrapper">
-    <?php
+    <!-- <?php
     require APPROOT . '/views/includes/navigation.php';
-    ?>
+    ?> -->
 </div>
 <script>
     $(document).ready(function() {

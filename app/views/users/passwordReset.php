@@ -1,7 +1,7 @@
 <?php
    require APPROOT . '/views/includes/head.php';
 ?>
-<?php require APPROOT . '/views/includes/navigation.php';?>
+<!-- <?php require APPROOT . '/views/includes/navigation.php';?> -->
 <section class = containerLogin>
   <article class = wrapperLogin>
     <form method="POST" action="sendEmail">

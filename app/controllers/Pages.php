@@ -27,6 +27,21 @@ class Pages extends Controller
         $this->AllAccessPass = $this->model('AllAccessPass');
     }
 
+    public function setDate()
+    {
+        $dateNow = new DateTime();
+        $firstDayofFestival = new DateTime("07/25/2021");
+        $lastDayofFestival = new DateTime("07/28/2021");
+  
+        if ($dateNow > $firstDayofFestival && $dateNow < $lastDayofFestival) {
+            $_SESSION['date_shown'] = $lastDayofFestival;
+            return $lastDayofFestival->format("Y-m-d");
+            }else{
+            $_SESSION['date_shown'] = $firstDayofFestival;
+            return $firstDayofFestival->format("Y-m-d");
+        }
+    }
+
     public function index()
     {
         $accessPassTickets = $this->AllAccessPass->getAccessPasses();
@@ -55,11 +70,24 @@ class Pages extends Controller
     {
         $data = [
             'title' => 'CMS',
-            'events' => ($this->ticketModel->getJazzByDay("2021-07-29"/*$_POST['date']*/))
+            'events' => ($this->ticketModel->getJazzByDay($this->setDate())),
+            'shownDate' => $this->setDate(),
         ];
 
         $this->view('pages/cms', $data);
     }
+
+    public function userManagement()
+    {
+        $data = [
+            'title' => 'CMS',
+            'events' => ($this->ticketModel->getJazzByDay($this->setDate())),
+            'shownDate' => $this->setDate(),
+        ];
+
+        $this->view('pages/userManagement', $data);
+    }
+
 
 
     public function orders()

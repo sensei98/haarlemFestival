@@ -3,9 +3,9 @@
 ?>
 
 <div class="section-landing">
-    <?php
+    <!-- <?php
        require APPROOT . '/views/includes/navigation.php';
-    ?>
+    ?> -->
 </div>
 <!--
 <script src="https://www.google.com/recaptcha/api.js?render=6Lfd3UEaAAAAAPea7o_3MQf9NtUy3EJBhRTex33R"></script>

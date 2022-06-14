@@ -10,7 +10,7 @@ define('DB_NAME', 's641496_db'); //Add your DB Name
 define('APPROOT', dirname(dirname(__FILE__)));
 
 //URLROOT (Dynamic links)
-define('URLROOT', 'http://localhost:8080/php/SchoolStuff/HaarlemFestival-Group2-Merging');
+define('URLROOT', 'http://localhost/haarlemFestival/');
 
 //mollie api key
 define('MOLLIE_API', 'test_Ds3fz4U9vNKxzCfVvVHJT2sgW5ECD8');
