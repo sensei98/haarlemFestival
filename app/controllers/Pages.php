@@ -195,6 +195,38 @@ class Pages extends Controller
         $this->view('pages/editJazz', $data);
     }
 
+    public function editUser()
+    {
+        if(isset($_POST['editForm'])){
+            unset($_POST['editForm']);
+            $newUsr = $_SESSION['loggedInUser'];
+            /*$newUsr->artistname = $_POST['artistname'];
+            $newUsr->location = $_POST['ticketLocation'];
+            $newUsr->hall = $_POST['ticketHall'];
+            $newUsr->price = $_POST['ticketPrice'];
+            $newUsr->timefrom = $_POST['startDateTime'];
+            $newUsr->timeto = $_POST['endDateTime'];
+            $newUsr->about = $_POST['about'];*/
+
+            var_dump($this->ticketModel->editUser($newUsr));
+
+            unset($_SESSION['selectedEventObj']);
+
+            $added = true;
+
+            $this->cms();
+            return;
+        }
+        $data = [
+            'title' => 'CMS',
+            'user' => $this->userModel->getUserByID($_GET['ID'])
+        ];
+
+        var_dump($_GET);
+
+        $this->view('pages/editUser', $data);
+    }
+
     public function orders()
     {
         $target_dir = "/upload";

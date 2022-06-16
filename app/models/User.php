@@ -54,6 +54,16 @@ class User {
         }
     }
 
+    public function getUserByID($id) {
+        //Prepared statement
+        $this->db->query('SELECT * FROM users WHERE ID = :ID');
+
+        //Email param will be binded with the email variable
+        $this->db->bind(':ID', $id);
+        
+        return $this->db->single();;
+    }
+
     public function getAllUsersUnderRole($user){
         //SELECT * FROM users WHERE typeID in (SELECT type_id from user_type WHERE LEVEL < (SELECT level from user_type WHERE type_id = 3 LIMIT 1 )) OR ID=0 OR typeID is NULL
         //Prepared statement

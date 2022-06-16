@@ -24,18 +24,18 @@ require APPROOT . '/views/includes/head.php';
         <div class="col-md-11">
             <table>
                 <tr>
+                    <th>ID</th>
                     <th>Username</th>
                     <th>Email</th>
                 </tr>
                 <?php foreach($data['users'] as $row): ?>
-                <form action="<?php echo URLROOT; ?>pages/editUser">
                     <tr>
+                        <td><?= $row->ID;?></td>
                         <td><?= $row->username;?></td>
                         <td><?= $row->email;?></td>
-                        <td><input type="submit" value="EDIT" /></td>
+                        <td><input type="button" value="EDIT" onclick="location.href='<?php echo URLROOT; ?>pages/editUser?ID=<?php echo $row->ID ?>'"/></td>
                         <!--<td><input <?php echo($_SESSION['loggedInUser']->typeID > 2 ? '' : 'hidden'); ?> type="submit" value="DELETE" /></td>-->
                     </tr>
-                </form>
 
                 <?php endforeach; ?>
             </table>

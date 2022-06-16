@@ -48,14 +48,12 @@ require APPROOT . '/views/includes/head.php';
                 </div>
                 <div class="row">
                     <div class="col-md-9">
-                        <input type="hidden" name="addForm" value="isTrue" />
-                        <input name="artistname" type="text" class="form-control" id="MainTitleArea" placeholder="Article Title here" value="">
-                        <input name="ticketLocation" type="text" class="form-control" placeholder="Article Location here" value="">
-                        <input name="ticketHall" type="text" class="form-control" placeholder="Article hall here" value="">
-                        <input name="ticketPrice" type="text" class="form-control" placeholder="Article price here" value="">
-                        <input name="startDateTime" type="datetime-local" min="2020-01-01" max="2021-12-31">
-                        <input name="endDateTime" type="datetime-local" min="2020-01-01" max="2021-12-31">
-                        <textarea name="about" class="form-control" id="MainTextArea" rows="20" placeholder="Article Text here"></textarea>
+                        <input type="hidden" name="editForm" value="isTrue" />
+                        <input name="name" type="text" class="form-control" placeholder="Name" value="">
+                        <input name="username" type="text" class="form-control" placeholder="Username" value="">
+                        <input name="email" type="text" class="form-control" placeholder="email" value="">
+                        <!--<input name="newpassword" type="text" class="form-control" placeholder="New Password" value="">-->
+                        <input name="typeID" type="text" class="form-control" placeholder="Type" value="">
                     </div>
                     <div class="col-md-3">
 
