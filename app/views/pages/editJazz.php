@@ -46,14 +46,14 @@ require APPROOT . '/views/includes/head.php';
                 </div>
                 <div class="row">
                     <div class="col-md-9">
-                        <input type="hidden" name="addForm" value="isTrue" />
-                        <input name="artistname" type="text" class="form-control" id="MainTitleArea" placeholder="Article Title here" value="">
-                        <input name="ticketLocation" type="text" class="form-control" placeholder="Article Location here" value="">
-                        <input name="ticketHall" type="text" class="form-control" placeholder="Article hall here" value="">
-                        <input name="ticketPrice" type="text" class="form-control" placeholder="Article price here" value="">
-                        <input name="startDateTime" type="datetime-local" min="2020-01-01" max="2021-12-31">
-                        <input name="endDateTime" type="datetime-local" min="2020-01-01" max="2021-12-31">
-                        <textarea name="about" class="form-control" id="MainTextArea" rows="20" placeholder="Article Text here"></textarea>
+                        <input type="hidden" name="editForm" value="isTrue" />
+                        <input name="artistname" type="text" class="form-control" id="MainTitleArea" placeholder="Article Title here" value="<?php echo($_SESSION['selectedEventObj']->artistname);?>">
+                        <input name="ticketLocation" type="text" class="form-control" placeholder="Article Location here" value="<?php echo($_SESSION['selectedEventObj']->location);?>">
+                        <input name="ticketHall" type="text" class="form-control" placeholder="Article hall here" value="<?php echo($_SESSION['selectedEventObj']->hall);?>">
+                        <input name="ticketPrice" type="text" class="form-control" placeholder="Article price here" value="<?php echo($_SESSION['selectedEventObj']->price);?>">
+                        <input name="startDateTime" type="datetime-local" min="2020-01-01" max="2021-12-31" value="<?php echo date('Y-m-d\TH:i:s', strtotime($_SESSION['selectedEventObj']->timefrom));?>">
+                        <input name="endDateTime" type="datetime-local" min="2020-01-01" max="2021-12-31" value="<?php echo date('Y-m-d\TH:i:s', strtotime($_SESSION['selectedEventObj']->timeto));?>">
+                        <textarea name="about" class="form-control" id="MainTextArea" rows="20" placeholder="Article Text here"><?php echo($_SESSION['selectedEventObj']->about);?></textarea>
                     </div>
                     <div class="col-md-3">
 

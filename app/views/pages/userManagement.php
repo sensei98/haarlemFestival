@@ -17,9 +17,9 @@ require APPROOT . '/views/includes/head.php';
                 href="<?php echo URLROOT; ?>pages/userManagement">
                 User Management
             </a>
-            <a type="button" class="btn sideBarButton" href="<?php echo URLROOT; ?>pages/ticketManagement">
+            <!--<a type="button" class="btn sideBarButton" href="<?php echo URLROOT; ?>pages/ticketManagement">
                 Ticket Data
-            </a>
+            </a>-->
         </div>
         <div class="col-md-11">
             <table>

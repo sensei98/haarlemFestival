@@ -47,6 +47,21 @@ class Ticket
         return $this->db->execute();
     }
 
+    public function editJazzTicket($event){
+        $this->db->query("UPDATE tickets SET artistname = :artist, location = :location, hall = :hall, price = :price, timefrom = :timefrom, timeto = :timeto, about = :about WHERE ID = :ID");
+        $this->db->bind(':ID', $event->ID);
+        $this->db->bind(':artist', $event->artistname);
+        $this->db->bind(':location', $event->location);
+        $this->db->bind(':hall', $event->hall);
+        $this->db->bind(':price', $event->price);
+        $this->db->bind(':timefrom', $event->timefrom);
+        $this->db->bind(':timeto', $event->timeto);
+        $this->db->bind(':about', $event->about);
+
+        
+        return $this->db->execute();
+    }
+
     public function deleteJazzTicket($event){
         $this->db->query("DELETE FROM tickets WHERE ID=:ID;");
         //$this->db->bind(':ID', $event->ID);

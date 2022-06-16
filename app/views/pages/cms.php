@@ -16,9 +16,9 @@ require APPROOT . '/views/includes/head.php';
             <a type="button" class="btn sideBarButton" href="<?php echo URLROOT; ?>pages/userManagement">
                 User Management
             </a>
-            <a type="button" class="btn sideBarButton" href="<?php echo URLROOT; ?>pages/ticketManagement">
+            <!--<a type="button" class="btn sideBarButton" href="<?php echo URLROOT; ?>pages/ticketManagement">
                 Ticket Data
-            </a>
+            </a>-->
         </div>
         <div class="col-md-11">
             <div>
@@ -71,7 +71,7 @@ require APPROOT . '/views/includes/head.php';
                         <button <?php echo($data['selectedEventObj'] ? '' : 'hidden'); ?> class="btn btn-warning" type="button" onclick="$('#saveForm').submit()">
                             <i class="fas fa-save"></i> Save Current Changes
                         </button>
-                        <button <?php echo($data['selectedEventObj'] ? '' : 'hidden'); ?> class="btn btn-warning" type="button" onclick="console.log('open edit details page')">
+                        <button <?php echo($data['selectedEventObj'] ? '' : 'hidden'); ?> class="btn btn-warning" type="button" onclick="location.href = '<?php echo URLROOT; ?>pages/editJazz/'">
                             <i class="fas fa-save"></i> Edit Details
                         </button>
                     </div>
@@ -85,7 +85,7 @@ require APPROOT . '/views/includes/head.php';
             </div>
             <div class="row">
                 <div class="col-md-9">
-                    <form id="saveForm" method="POST">
+                    <form id="saveForm" method="POST" action="<?php echo URLROOT; ?>pages/cms/">
                         <input type="hidden" name="saveForm" value="isTrue"/>
                         <input name="ticketHead" type="text" class="form-control" id="MainTitleArea"
                             placeholder="Article Title here"

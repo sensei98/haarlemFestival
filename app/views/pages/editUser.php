@@ -40,6 +40,8 @@ require APPROOT . '/views/includes/head.php';
                             <input type="submit" class="btn btn-warning">
                                 <i class="fas fa-save"></i>
                             </input>
+                            <input type="submit" class="btn btn-error" value="Delete article">
+                            </input>
                         </div>
                         </br>
                     </div>
