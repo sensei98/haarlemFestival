@@ -222,7 +222,7 @@ class Pages extends Controller
             'user' => $this->userModel->getUserByID($_GET['ID'])
         ];
 
-        var_dump($_GET);
+        var_dump($data);
 
         $this->view('pages/editUser', $data);
     }
