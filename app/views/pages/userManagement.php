@@ -6,84 +6,39 @@ require APPROOT . '/views/includes/head.php';
     require APPROOT . '/views/includes/navigation.php';
     ?> -->
 </div>
-<script>
-    $(document).ready(function() {
-        $('#toggleSwitch').click(function() {
-            $(this).toggleClass('fa-toggle-on');
-            $(this).toggleClass('fa-toggle-off');
-        });
-    });
-</script>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-1">
-            <button type="button" class="btn sideBarButton sideBarButtonSelected" href="cms">
+            <a type="button" class="btn sideBarButton" href="<?php echo URLROOT; ?>pages/cms">
                 Jazz
-            </button>
-            <a type="button" class="btn sideBarButton" href="userManagement">
+            </a>
+            <a type="button" class="btn sideBarButton sideBarButtonSelected"
+                href="<?php echo URLROOT; ?>pages/userManagement">
                 User Management
             </a>
-            <button type="button" class="btn sideBarButton" href="ticketManagement">
+            <a type="button" class="btn sideBarButton" href="<?php echo URLROOT; ?>pages/ticketManagement">
                 Ticket Data
-            </button>
-            <button type="button" class="btn sideBarButton" href="logOut">
-                Log Out
-            </button>
+            </a>
         </div>
         <div class="col-md-11">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input type="date" id="datePick" value="<?php echo date('Y-m-d') ?>" min="2020-01-01" max="2021-12-31">
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <select name="events" id="events">
-                            <?php foreach ($data["events"] as $event) : ?>
-                                <option value="<?= $event->artistname ?>"><?= $event->artistname ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                </div>
-                <div class="col-md-3">
-                </div>
-                <div class="col-md-3">
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-secondary" type="button">
-                            <i class="fas fa-plus"></i> Add New Article
-                        </button>
-                        <button class="btn btn-danger" type="button">
-                            <i class="fas fa-trash-alt"></i> Delete Current Article
-                        </button>
-                    </div>
-                    </br>
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-warning" type="button">
-                            <i class="fas fa-save"></i> Save Current Changes
-                        </button>
-                    </div>
-                    </br>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-9">
-                    <input type="text" class="form-control" id="MainTitleArea" placeholder="Article Title here">
-                    <textarea class="form-control" id="MainTextArea" rows="20" placeholder="Article Text here"></textarea>
-                </div>
-                <div class="col-md-3">
-                    <div>
-                        <!--<?php foreach ($data['events'] as $row) : ?>
-                            <tr>
-                                <td><?= $row->artistname; ?></td>
-                            </tr>
-                        <?php endforeach; ?>-->
-                    </div>
-                </div>
-            </div>
+            <table>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                </tr>
+                <?php foreach($data['users'] as $row): ?>
+                <form action="<?php echo URLROOT; ?>pages/editUser">
+                    <tr>
+                        <td><?= $row->username;?></td>
+                        <td><?= $row->email;?></td>
+                        <td><input type="submit" value="EDIT" /></td>
+                        <!--<td><input <?php echo($_SESSION['loggedInUser']->typeID > 2 ? '' : 'hidden'); ?> type="submit" value="DELETE" /></td>-->
+                    </tr>
+                </form>
+
+                <?php endforeach; ?>
+            </table>
         </div>
     </div>
 </div>

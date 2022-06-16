@@ -21,7 +21,7 @@
     -->
     <div class="container-login">
         <div class="wrapper-login">
-            <h2>Sign in</h2>
+            <h2 style="color:black">Sign in</h2>
 
             <form action="<?php echo URLROOT; ?>/users/login" method="POST">
                 <input type="text" placeholder="Username *" name="username">
@@ -36,7 +36,7 @@
                 <button id="submit" type="submit" value="submit">Submit</button>
 
                 
-                <p class="options">Not registered yet? <a href="<?php echo URLROOT; ?>/users/register">Create an
+                <p class="options" style="color:black">Not registered yet? <a href="<?php echo URLROOT; ?>/users/register">Create an
                         account!</a><p class="options"><a href="<?php echo URLROOT; ?>/users/passwordReset">forgot your password?</a></p></p>
             </form>
         </div>

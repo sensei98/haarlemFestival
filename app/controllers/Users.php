@@ -146,6 +146,7 @@ class Users extends Controller {
 
     public function createUserSession($user) {
         var_dump($user);
+        $_SESSION['loggedInUser'] = $user;
         $_SESSION['user_id'] = $user->ID;
         $_SESSION['username'] = $user->username;
         $_SESSION['email'] = $user->email;
@@ -154,6 +155,7 @@ class Users extends Controller {
     }
 
     public function logout() {
+        unset($_SESSION['loggedInUser']);
         unset($_SESSION['user_id']);
         unset($_SESSION['username']);
         unset($_SESSION['email']);

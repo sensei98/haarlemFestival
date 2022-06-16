@@ -20,7 +20,7 @@
     -->
 <div class="container-login">
     <div class="wrapper-login">
-        <h2>Register</h2>
+        <h2 style="color:black">Register</h2>
 
             <form
                 id="register-form"
@@ -49,7 +49,7 @@
 
             <button class="darkBtn" id="submit" type="submit" value="submit">Submit</button>
 
-            <p class="options">Already registered? <a href="<?php echo URLROOT; ?>/users/login">Log In!</a></p>
+            <p class="options" style="color:black">Already registered? <a href="<?php echo URLROOT; ?>/users/login">Log In!</a></p>
         </form>
     </div>
 </div>

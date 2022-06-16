@@ -6,7 +6,7 @@ class User {
     }
 
     public function register($data) {
-        $this->db->query('INSERT INTO users (username, email, password) VALUES(:username, :email, :password)');
+        $this->db->query('INSERT INTO users (username, email, password, typeID) VALUES(:username, :email, :password, 1)');
 
         //Bind values
         $this->db->bind(':username', $data['username']);
@@ -54,8 +54,31 @@ class User {
         }
     }
 
+    public function getAllUsersUnderRole($user){
+        //SELECT * FROM users WHERE typeID in (SELECT type_id from user_type WHERE LEVEL < (SELECT level from user_type WHERE type_id = 3 LIMIT 1 )) OR ID=0 OR typeID is NULL
+        //Prepared statement
+        $this->db->query('SELECT * FROM users WHERE typeID in (SELECT type_id from user_type WHERE LEVEL < (SELECT level from user_type WHERE type_id = :level LIMIT 1 )) OR ID=:myID OR typeID is NULL');
+
+        $this->db->bind(':level', $user->typeID);
+        $this->db->bind(':myID', $user->ID);
+
+        $result = $this->db->resultSet();
+        return $result;
+
+    }
+
+    
+    public function getUserLevel($user){
+        $this->db->query('SELECT level FROM user_type WHERE type_ID = :typeID');
+
+        $this->db->bind(':typeID', $user->typeID);
+
+        $row = $this->db->single();
+        return $row->level;
+    }
+
     //Adds log to database table
-    public function dbLog($username, $type_id, $log_detail = "") {
+    /*public function dbLog($username, $type_id, $log_detail = "") {
 
         $user_id = $this->findUserIdByUsername($username);
         $this->db->query('INSERT INTO logs (user_id, type_id, time, event_log) VALUES(:user_id, :type, now(), :detail)');
@@ -71,9 +94,9 @@ class User {
         } else {
             return false;
         }
-    }
+    }*/
 
-    public function getLogs($user_id, $privilege_level){
+    /*public function getLogs($user_id, $privilege_level){
         $this->db->query('SELECT l.log_id, u.username, e.name, l.time, l.event_log FROM logs l inner join event_types e on l.type_id = e.type_id inner JOIN users u on l.user_id = u.user_id inner join privileges p on u.privilege_level = p.privilege_level WHERE l.user_id = :user_id OR l.user_id in (SELECT user_id FROM users where privilege_level < :privilege)');
 
         $this->db->bind(':user_id', $user_id);
@@ -81,7 +104,7 @@ class User {
 
         $result = $this->db->resultSet();
         return $result;
-    }
+    }*/
 
     public function sendResetEmail($data){
         $this->db->query('SELECT email, password FROM Users WHERE email= :email');
