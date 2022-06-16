@@ -23,7 +23,7 @@
         </ul>
     </section>
     <section class="emptyLabel">
-        Thanks for shopping with us
+        Thanks for shopping with us. Your ticket has been mailed to you.
     </section>
     <section class='btn-continue-container'><a class='btn-continue' href='<?php echo URLROOT; ?>/pages/index'>Continue shopping?</a></section>
 
