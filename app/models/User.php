@@ -21,6 +21,41 @@ class User {
         }
     }
 
+    public function editUser($user) {
+        $this->db->query('UPDATE users SET name = :nm, username = :usr, email = :em, typeID = :tID ' . (($user->password) ? ',password = :pwd ' : '') . 'WHERE ID = :id');
+
+        //var_dump($user->typeID);
+
+        //Bind values
+        $this->db->bind(':nm', $user->name);
+        $this->db->bind(':usr', $user->username);
+        $this->db->bind(':em', $user->email);
+        $this->db->bind(':tID', $user->typeID);
+        $this->db->bind(':id', $user->ID);
+
+        if($user->password){ //
+            $this->db->bind(':pwd', $user->password);
+            //var_dump($user->password);
+        }
+
+        return $this->db->execute();
+    }
+
+    public function addUser($user) {
+        $this->db->query('INSERT INTO users(name, username, email, typeID, password) VALUES (:nm, :usr, :em, :tID, :pwd);');
+
+        //var_dump($user->typeID);
+
+        //Bind values
+        $this->db->bind(':nm', $user->name);
+        $this->db->bind(':usr', $user->username);
+        $this->db->bind(':em', $user->email);
+        $this->db->bind(':tID', $user->typeID);
+        $this->db->bind(':pwd', $user->password);
+
+        return $this->db->execute();
+    }
+
     public function login($username, $password) {
         $this->db->query('SELECT * FROM users WHERE username = :username');
 

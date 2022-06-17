@@ -89,7 +89,8 @@ class Pages extends Controller
             $_SESSION['shownDate'] = is_a($_POST['datePick'], 'DateTime') ? $_POST['datePick']->format("Y-m-d") : $_POST['datePick'];
         }
         else{
-            $_SESSION['shownDate'] = '2021-07-29';
+            if(!isset($_SESSION['shownDate']))
+                $_SESSION['shownDate'] = '2021-07-29';
         }
         
         if(isset($_POST['events'])){
@@ -199,22 +200,18 @@ class Pages extends Controller
     {
         if(isset($_POST['editForm'])){
             unset($_POST['editForm']);
-            $newUsr = $_SESSION['loggedInUser'];
-            /*$newUsr->artistname = $_POST['artistname'];
-            $newUsr->location = $_POST['ticketLocation'];
-            $newUsr->hall = $_POST['ticketHall'];
-            $newUsr->price = $_POST['ticketPrice'];
-            $newUsr->timefrom = $_POST['startDateTime'];
-            $newUsr->timeto = $_POST['endDateTime'];
-            $newUsr->about = $_POST['about'];*/
+            $newUsr = new User();
 
-            var_dump($this->ticketModel->editUser($newUsr));
+            $newUsr->ID = $_POST['ID'];
+            $newUsr->name = $_POST['name'];
+            $newUsr->password = ($_POST['newpassword'] == "") ? null : password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
+            $newUsr->username = $_POST['username'];
+            $newUsr->email = $_POST['email'];
+            $newUsr->typeID = $_POST['typeID'];
 
-            unset($_SESSION['selectedEventObj']);
+            var_dump($this->userModel->editUser($newUsr));
 
-            $added = true;
-
-            $this->cms();
+            $this->userManagement();
             return;
         }
         $data = [
@@ -222,9 +219,32 @@ class Pages extends Controller
             'user' => $this->userModel->getUserByID($_GET['ID'])
         ];
 
-        var_dump($data);
-
         $this->view('pages/editUser', $data);
+    }
+
+    public function addUser()
+    {
+        if(isset($_POST['addForm'])){
+            unset($_POST['addForm']);
+            $newUsr = new User();
+
+            $newUsr->name = $_POST['name'];
+            $newUsr->password = ($_POST['newpassword'] == "") ? null : password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
+            $newUsr->username = $_POST['username'];
+            $newUsr->email = $_POST['email'];
+            $newUsr->typeID = $_POST['typeID'];
+
+            $this->userModel->addUser($newUsr);
+
+            $this->userManagement();
+            return;
+        }
+
+        $data = [
+            'title' => 'CMS',
+        ];
+
+        $this->view('pages/addUser', $data);
     }
 
     public function orders()

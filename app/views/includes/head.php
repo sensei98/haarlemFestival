@@ -50,9 +50,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?php echo URLROOT; ?>#">Food</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?php echo URLROOT; ?>pages/cms">CMS</a>
-                    </li>
+                    <?php if(isset($_SESSION['loggedInUser'])): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?php echo URLROOT; ?>pages/cms">CMS</a>
+                        </li>
+                    <?php endif; ?>
+                        
                     <li class="btn-login">
                         <?php if(isset($_SESSION['user_id'])) : ?>
                         <a href="<?php echo URLROOT; ?>/users/logout">Log out</a>

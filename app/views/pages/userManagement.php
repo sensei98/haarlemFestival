@@ -21,7 +21,7 @@ require APPROOT . '/views/includes/head.php';
                 Ticket Data
             </a>-->
         </div>
-        <div class="col-md-11">
+        <div class="col-md-8">
             <table>
                 <tr>
                     <th>ID</th>
@@ -39,6 +39,11 @@ require APPROOT . '/views/includes/head.php';
 
                 <?php endforeach; ?>
             </table>
+        </div>
+        <div class="col-md-3">
+            <button <?php echo($_SESSION['loggedInUser']->typeID > 2 ? '' : 'hidden'); ?> class="btn btn-warning" type="button" onclick="location.href='<?php echo URLROOT; ?>pages/addUser'">
+                <i class="fas fa-save"></i> Add New User
+            </button>
         </div>
     </div>
 </div>
