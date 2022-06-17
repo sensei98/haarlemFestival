@@ -2,54 +2,53 @@
 require APPROOT . '/views/includes/head.php';
 ?>
 <div class="tenPwrapper">
-    <?php
+    <!-- <?php
     require APPROOT . '/views/includes/navigation.php';
-    ?>
+    ?> -->
 </div>
-<script>
-    $(document).ready(function() {
-        $('#toggleSwitch').click(function() {
-            $(this).toggleClass('fa-toggle-on');
-            $(this).toggleClass('fa-toggle-off');
-        });
-    });
-</script>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-1">
-            <button type="button" class="btn sideBarButton sideBarButtonSelected" href="cms">
+            <a type="button" class="btn sideBarButton sideBarButtonSelected" href="<?php echo URLROOT; ?>pages/cms">
                 Jazz
-            </button>
-            <a type="button" class="btn sideBarButton" href="userManagement">
+            </a>
+            <a type="button" class="btn sideBarButton" href="<?php echo URLROOT; ?>pages/userManagement">
                 User Management
             </a>
-            <button type="button" class="btn sideBarButton" href="ticketManagement">
+            <!--<a type="button" class="btn sideBarButton" href="<?php echo URLROOT; ?>pages/ticketManagement">
                 Ticket Data
-            </button>
-            <button type="button" class="btn sideBarButton" href="logOut">
-                Log Out
-            </button>
+            </a>-->
         </div>
         <div class="col-md-11">
+            <div>
+                <?php /*var_dump($data);*//*var_dump(array_column($data['events'], null, 'artistname')[$data['selectedEvent']])*/?>
+            </div>
             <div class="row">
                 <div class="col-md-3">
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="date" id="datePick" value="<?php echo date('Y-m-d') ?>" min="2020-01-01" max="2021-12-31">
+                            <form id="dateForm" method="POST">
+                                <input name="datePick" type="date" id="datePick"
+                                    value="<?php echo $data['shownDate'] ?>" min="2020-01-01" max="2021-12-31">
+                            </form>
                         </div>
                         <!--<div class="col-md-6">
                             <div style="color: #fff;">Off <i id="toggleSwitch" class="fas fa-toggle-on fa-lg"></i> ON
                             </div>
                         </div>-->
                     </div>
-                    <div class="dropdown">
-                        <select name="events" id="events">
-                            <?php foreach ($data["events"] as $event) : ?>
-                                <option value="<?= $event->artistname ?>"><?= $event->artistname ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                    <form id="dropDownForm" method="POST">
+                        <div class="dropdown">
+                            <select name="events" id="events">
+                                <?php foreach ($data["events"] as $event) : ?>
+                                <option value="<?= $event->artistname?>"
+                                    <?php echo ($event->artistname ==  $data['selectedEvent']) ? 'selected="selected"' : '';?>>
+                                    <?= $event->artistname?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </form>
                 </div>
                 <div class="col-md-3">
                 </div>
@@ -57,10 +56,10 @@ require APPROOT . '/views/includes/head.php';
                 </div>
                 <div class="col-md-3">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-secondary" type="button">
+                        <button class="btn btn-secondary" type="button" onclick="location.href = '<?php echo URLROOT; ?>pages/addJazz/'">
                             <i class="fas fa-plus"></i> Add New Article
                         </button>
-                        <button class="btn btn-danger" type="button">
+                        <button class="btn btn-danger" type="button" onclick="location.href = '<?php echo URLROOT; ?>pages/deleteJazz/'">
                             <i class="fas fa-trash-alt"></i> Delete Current Article
                         </button>
                     </div>
@@ -69,8 +68,11 @@ require APPROOT . '/views/includes/head.php';
                         <!--<button class="btn btn-secondary" type="button">
                             <i class="fas fa-plus-square"></i> Add Image
                         </button>-->
-                        <button class="btn btn-warning" type="button">
+                        <button <?php echo($data['selectedEventObj'] ? '' : 'hidden'); ?> class="btn btn-warning" type="button" onclick="$('#saveForm').submit()">
                             <i class="fas fa-save"></i> Save Current Changes
+                        </button>
+                        <button <?php echo($data['selectedEventObj'] ? '' : 'hidden'); ?> class="btn btn-warning" type="button" onclick="location.href = '<?php echo URLROOT; ?>pages/editJazz/'">
+                            <i class="fas fa-save"></i> Edit Details
                         </button>
                     </div>
                     </br>
@@ -83,19 +85,34 @@ require APPROOT . '/views/includes/head.php';
             </div>
             <div class="row">
                 <div class="col-md-9">
-                    <input type="text" class="form-control" id="MainTitleArea" placeholder="Article Title here" value="<?php echo($data['events'][0]->artistname)?>">
-                    <textarea class="form-control" id="MainTextArea" rows="20" placeholder="Article Text here"><?php echo($data['events'][0]->about)?></textarea>
+                    <form id="saveForm" method="POST" action="<?php echo URLROOT; ?>pages/cms/">
+                        <input type="hidden" name="saveForm" value="isTrue"/>
+                        <input name="ticketHead" type="text" class="form-control" id="MainTitleArea"
+                            placeholder="Article Title here"
+                            value="<?php echo($data['selectedEvent'] ?? ($data['events'][0]->artistname ?? ''))?>">
+                        <textarea name="ticketBody" class="form-control" id="MainTextArea" rows="20"
+                            placeholder="Article Text here"><?php echo((count($data['events']) > 0) ? (array_column($data['events'], null, 'artistname')[$data['selectedEvent'] ?? $data['events'][0]->artistname]->about ?? '') : '')?></textarea>
+                    </form>
                 </div>
                 <div class="col-md-3">
-                    <div>
-                    
-                    <?php /*var_dump($data)*/?>
-                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
 </body>
+
+<script>
+    $('#datePick').change(function () {
+        console.log('Submitting form');
+        $('#dateForm').submit();
+    });
+
+    $('#events').change(function () {
+        console.log('Submitting form');
+        $('#dropDownForm').submit();
+    });
+</script>
 
 </html>

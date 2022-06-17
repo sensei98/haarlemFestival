@@ -27,6 +27,21 @@ class Pages extends Controller
         $this->AllAccessPass = $this->model('AllAccessPass');
     }
 
+    public function setDate()
+    {
+        $dateNow = new DateTime();
+        $firstDayofFestival = new DateTime("07/25/2021");
+        $lastDayofFestival = new DateTime("07/28/2021");
+  
+        if ($dateNow > $firstDayofFestival && $dateNow < $lastDayofFestival) {
+            $_SESSION['shownDate'] = $lastDayofFestival;
+            return $lastDayofFestival->format("Y-m-d");
+            }else{
+            $_SESSION['shownDate'] = $firstDayofFestival;
+            return $firstDayofFestival->format("Y-m-d");
+        }
+    }
+
     public function index()
     {
         $accessPassTickets = $this->AllAccessPass->getAccessPasses();
@@ -50,24 +65,193 @@ class Pages extends Controller
         $this->view('pages/about', $data);
     }
 
-
     public function cms()
     {
+        if($this->userModel->getUserLevel($_SESSION['loggedInUser']) < 2)
+        {
+            $this->userManagement();
+            return;
+        }
+
+
+        if(isset($_POST['saveForm'])){
+            unset($_POST['saveForm']);
+            $updatedTkt = $_SESSION['selectedEventObj'];
+            $updatedTkt->artistname = $_POST['ticketHead'];
+            $updatedTkt->about = $_POST['ticketBody'];
+            var_dump($this->ticketModel->saveJazzChanges($updatedTkt));
+            //
+            unset($_SESSION['selectedEventObj']);
+        }
+
+
+        if(isset($_POST['datePick'])){
+            $_SESSION['shownDate'] = is_a($_POST['datePick'], 'DateTime') ? $_POST['datePick']->format("Y-m-d") : $_POST['datePick'];
+        }
+        else{
+            if(!isset($_SESSION['shownDate']))
+                $_SESSION['shownDate'] = '2021-07-29';
+        }
+        
+        if(isset($_POST['events'])){
+            $_SESSION['selectedEvent'] = $_POST['events'];
+        }
+        else{
+            $_SESSION['selectedEvent'] = null;
+        }
+
         $data = [
             'title' => 'CMS',
-            'events' => ($this->ticketModel->getJazzByDay("2021-07-29"/*$_POST['date']*/))
+            'events' => ($this->ticketModel->getJazzByDay($_SESSION['shownDate'] ?? $this->setDate())),
+            'shownDate' => $_SESSION['shownDate'] ?? ($_SESSION['shownDate'] ?? $this->setDate()),
+            'selectedEvent' => $_SESSION['selectedEvent'] ?? null,
+            'POST_Data' => $_POST,
+            'SESSION_Data' => $_SESSION,
         ];
+
+        $data['selectedEventObj'] = (count($data['events']) > 0) ? (array_column($data['events'], null, 'artistname')[$data['selectedEvent'] ?? $data['events'][0]->artistname] ?? null) : null;
+        $_SESSION['selectedEventObj'] = $data['selectedEventObj'] ?? null;
 
         $this->view('pages/cms', $data);
     }
 
+    public function addJazz(){
+        if(isset($_POST['addForm'])){
+            unset($_POST['addForm']);
+            $newTkt = new Ticket();
+            $newTkt->artistname = $_POST['artistname'];
+            $newTkt->location = $_POST['ticketLocation'];
+            $newTkt->hall = $_POST['ticketHall'];
+            $newTkt->price = $_POST['ticketPrice'];
+            $newTkt->timefrom = $_POST['startDateTime'];
+            $newTkt->timeto = $_POST['endDateTime'];
+            $newTkt->about = $_POST['about'];
+            var_dump($this->ticketModel->addJazzTicket($newTkt));
+            //
+            unset($_SESSION['selectedEventObj']);
+
+            $added = true;
+        }
+
+        $data = [
+            'title' => 'CMS',
+            'events' => ($this->ticketModel->getJazzByDay($this->setDate())),
+            'shownDate' => $this->setDate(),
+            'successfulAdd' => $added ?? false,
+        ];
+
+        $this->view('pages/addJazz', $data);
+    }
+
+    public function deleteJazz(){
+
+        var_dump($this->ticketModel->deleteJazzTicket($_SESSION['selectedEventObj']));
+
+        $data = [
+            'title' => 'CMS',
+            'events' => ($this->ticketModel->getJazzByDay($this->setDate())),
+            'shownDate' => $this->setDate(),
+            'successfulAdd' => $added ?? false,
+        ];
+
+        $this->cms();
+    }
+
+    public function userManagement()
+    {
+        $data = [
+            'title' => 'CMS',
+            'users' => ($_SESSION['loggedInUser']) ? ($this->userModel->getAllUsersUnderRole($_SESSION['loggedInUser'])) : null,
+        ];
+
+        $this->view('pages/userManagement', $data);
+    }
+
+    public function editJazz()
+    {
+        if(isset($_POST['editForm'])){
+            unset($_POST['editForm']);
+            $newTkt = $_SESSION['selectedEventObj'];
+            $newTkt->artistname = $_POST['artistname'];
+            $newTkt->location = $_POST['ticketLocation'];
+            $newTkt->hall = $_POST['ticketHall'];
+            $newTkt->price = $_POST['ticketPrice'];
+            $newTkt->timefrom = $_POST['startDateTime'];
+            $newTkt->timeto = $_POST['endDateTime'];
+            $newTkt->about = $_POST['about'];
+
+            var_dump($this->ticketModel->editJazzTicket($newTkt));
+
+            unset($_SESSION['selectedEventObj']);
+
+            $added = true;
+
+            $this->cms();
+            return;
+        }
+        $data = [
+            'title' => 'CMS',
+        ];
+
+        $this->view('pages/editJazz', $data);
+    }
+
+    public function editUser()
+    {
+        if(isset($_POST['editForm'])){
+            unset($_POST['editForm']);
+            $newUsr = new User();
+
+            $newUsr->ID = $_POST['ID'];
+            $newUsr->name = $_POST['name'];
+            $newUsr->password = ($_POST['newpassword'] == "") ? null : password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
+            $newUsr->username = $_POST['username'];
+            $newUsr->email = $_POST['email'];
+            $newUsr->typeID = $_POST['typeID'];
+
+            var_dump($this->userModel->editUser($newUsr));
+
+            $this->userManagement();
+            return;
+        }
+        $data = [
+            'title' => 'CMS',
+            'user' => $this->userModel->getUserByID($_GET['ID'])
+        ];
+
+        $this->view('pages/editUser', $data);
+    }
+
+    public function addUser()
+    {
+        if(isset($_POST['addForm'])){
+            unset($_POST['addForm']);
+            $newUsr = new User();
+
+            $newUsr->name = $_POST['name'];
+            $newUsr->password = ($_POST['newpassword'] == "") ? null : password_hash($_POST['newpassword'], PASSWORD_DEFAULT);
+            $newUsr->username = $_POST['username'];
+            $newUsr->email = $_POST['email'];
+            $newUsr->typeID = $_POST['typeID'];
+
+            $this->userModel->addUser($newUsr);
+
+            $this->userManagement();
+            return;
+        }
+
+        $data = [
+            'title' => 'CMS',
+        ];
+
+        $this->view('pages/addUser', $data);
+    }
 
     public function orders()
     {
         $target_dir = "/upload";
 
         $uploadOk = 1;
-
 
         // Check if image file is a actual image or fake image
         if (isset($_POST["submit"])) {
@@ -214,7 +398,7 @@ class Pages extends Controller
             if (isset($_POST['add'])) {
                 $data = $this->initShoppingCart($this->ValidateData($_POST['hidden_ID']));
             }
-            $this->view('pages/cartpage', $data);
+            $this->view('pages/cartpage', $data ?? null);
         } catch (Exception $e) {
             echo $e->getMessage();
         }
